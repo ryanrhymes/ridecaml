@@ -6,7 +6,7 @@
 **)
 
 print_endline "Testing cache module --> 1 ..."
-let s1 : Cache.service = {id = 1; uri = "wwww.google.com"; timestamp = 0.; size = 12345;};;
+let s1 : Cache.service = {id = 1; uri = "wwww.google.com"; timestamp = 0.; size = 12345;}
 let s2 : Cache.service = {id = 2; uri = "wwww.yahoo.com"; timestamp = 0.; size = 78901;};;
 Cache.add s1;;
 Cache.add s2;;
@@ -21,5 +21,5 @@ done;;
 Cache.debug Cache.service_cache;;
 
 print_endline "Test caching module --> 3 ...";;
-Cache.print 1;;
-Cache.print 2;;
+let s = Cache.remove_oldest Cache.service_cache;;
+Cache.print s;;
