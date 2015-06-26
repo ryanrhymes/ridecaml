@@ -9,10 +9,10 @@ open Lwt
 open Cohttp
 open Cohttp_lwt_unix
 
-let d_uri = "128.232.65.27"
+let d_uri = "http://128.232.65.27:2375/images/json"
 
 let test =
-  Client.get (Uri.of_string "http://www.cl.cam.ac.uk/~lw525/") >>= fun (resp, body) ->
+  Client.get (Uri.of_string d_uri) >>= fun (resp, body) ->
   let code = resp |> Response.status |> Code.code_of_status in
   Printf.printf "Response code: %d\n" code;
   (**Printf.printf "Headers: %s\n" (resp |> Response.headers |> Header.to_string);**)
