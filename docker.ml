@@ -9,13 +9,39 @@ open Lwt
 open Cohttp
 open Cohttp_lwt_unix
 
-let d_uri = "http://128.232.65.27:2375/images/json"
+let docker_uri = "http://128.232.65.27:2375"
 
-let docker_deamon uri =
+let docker_daemon uri =
   Client.get (Uri.of_string uri) >>= fun (resp, body) ->
   body |> Cohttp_lwt_body.to_string
 
+let containers ?param uri = 
+  let q = uri ^ "/containers/json" in
+  Lwt_main.run (docker_daemon q)
+
+let images uri = 
+  let q = uri ^ "/images/json" in
+  Lwt_main.run (docker_daemon q)
+
+let info uri = 
+  let q = uri ^ "/info" in
+  Lwt_main.run (docker_daemon q)
+
+let inspect uri cid = 
+  let q = uri ^ "/containers/" ^ cid ^ "/json" in
+  Lwt_main.run (docker_daemon q)
+
+let ping uri =
+  let q = uri ^ "/_ping" in
+  Lwt_main.run (docker_daemon q)
+
+let port uri = 0
+
+let pull uri = 0
+
+let push uri = 0
+
 let () =
-  print_endline ("Docker OCaml API @ " ^ d_uri);;
-  let x = Lwt_main.run docker_deamon d_uri in
-  print_endline ("Received body\n" ^ x)
+  let s = containers docker_uri in
+  print_endline s
+
