@@ -42,6 +42,7 @@ let pull uri = 0
 let push uri = 0
 
 let () =
-  let s = containers docker_uri in
-  print_endline s
+  let s = info docker_uri in
+  let json = Yojson.Basic.from_string s in
+  print_endline (Yojson.Basic.pretty_to_string json)
 
