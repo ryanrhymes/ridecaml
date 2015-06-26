@@ -11,11 +11,11 @@ open Cohttp_lwt_unix
 
 let d_uri = "http://128.232.65.27:2375/images/json"
 
-let docker_deamon =
-  Client.get (Uri.of_string d_uri) >>= fun (resp, body) ->
+let docker_deamon uri =
+  Client.get (Uri.of_string uri) >>= fun (resp, body) ->
   body |> Cohttp_lwt_body.to_string
 
 let () =
   print_endline ("Docker OCaml API @ " ^ d_uri);;
-  let x = Lwt_main.run docker_deamon in
+  let x = Lwt_main.run docker_deamon d_uri in
   print_endline ("Received body\n" ^ x)
