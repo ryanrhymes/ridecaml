@@ -9,8 +9,6 @@ open Lwt
 open Cohttp
 open Cohttp_lwt_unix
 
-let docker_uri = "http://128.232.65.27:2375"
-
 let docker_daemon uri =
   Client.get (Uri.of_string uri) 
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
@@ -52,6 +50,3 @@ let top uri cid =
   let q = uri ^ "/containers/" ^ cid ^ "/top" in
   get_json q
 
-let () =
-  let json = info docker_uri in
-  print_endline (Yojson.Basic.pretty_to_string json)
