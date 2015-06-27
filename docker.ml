@@ -34,6 +34,10 @@ let inspect uri cid =
   let q = uri ^ "/containers/" ^ cid ^ "/json" in
   get_json q
 
+let logs uri cid = 
+  let q = uri ^ "/containers/" ^ cid ^ "/logs" in
+  get_json q
+
 let ping uri =
   let q = uri ^ "/_ping" in
   Lwt_main.run (docker_daemon q)
@@ -43,6 +47,10 @@ let port uri = 0
 let pull uri = 0
 
 let push uri = 0
+
+let top uri cid = 
+  let q = uri ^ "/containers/" ^ cid ^ "/top" in
+  get_json q
 
 let () =
   let json = info docker_uri in
