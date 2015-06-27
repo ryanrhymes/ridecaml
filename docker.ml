@@ -9,6 +9,7 @@ open Lwt
 open Cohttp
 open Cohttp_lwt_unix
 
+
 (** These are common functions. **)
 
 let docker_daemon uri =
@@ -17,6 +18,7 @@ let docker_daemon uri =
 
 let get_json query =
   Lwt_main.run (docker_daemon query) |> Yojson.Basic.from_string
+
 
 (** API to container functions. **)
 
@@ -50,10 +52,6 @@ module Container = struct
 
   let pause uri = 0
 
-  let ping uri =
-    let q = uri ^ "/_ping" in
-    Lwt_main.run (docker_daemon q)
-
   let port uri = 0
 
   let pull uri = 0
@@ -84,23 +82,61 @@ module Container = struct
 
 end
 
+
 (** API to Image functions. **)
 
 module Image = struct
+
+  let create uri = 0
+
+  let build uri = 0
+
+  let get_image uri = 0
+
+  let history uri = 0
 
   let images uri = 
     let q = uri ^ "/images/json" in
     get_json q
 
+  let inspect uri = 0
+
+  let load uri = 0
+
+  let push uri = 0
+
+  let search uri = 0
+
+  let tag uri = 0
+
+  let remove uri = 0
+
 end
 
 (** API to mist functions. **)
+
+let auth uri = 0
+
+let commit uri = 0
+
+let events uri = 0
+
+let exec_create uri = 0
+
+let exec_start uri = 0
+
+let exec_resize uri = 0
+
+let exec_inspect uri = 0
 
 let info uri = 
   let q = uri ^ "/info" in
   get_json q
 
+let ping uri =
+  let q = uri ^ "/_ping" in
+  Lwt_main.run (docker_daemon q)
+
 let version uri = 
   let q = uri ^ "/version" in
   get_json q
-
