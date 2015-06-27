@@ -12,24 +12,27 @@ open Cohttp_lwt_unix
 let docker_uri = "http://128.232.65.27:2375"
 
 let docker_daemon uri =
-  Client.get (Uri.of_string uri) >>= fun (resp, body) ->
-  Cohttp_lwt_body.to_string body
+  Client.get (Uri.of_string uri) 
+  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
+
+let get_json query =
+  Lwt_main.run (docker_daemon query) |> Yojson.Basic.from_string
 
 let containers ?param uri = 
   let q = uri ^ "/containers/json" in
-  Lwt_main.run (docker_daemon q)
+  get_json q
 
 let images uri = 
   let q = uri ^ "/images/json" in
-  Lwt_main.run (docker_daemon q)
+  get_json q
 
 let info uri = 
   let q = uri ^ "/info" in
-  Lwt_main.run (docker_daemon q)
+  get_json q
 
 let inspect uri cid = 
   let q = uri ^ "/containers/" ^ cid ^ "/json" in
-  Lwt_main.run (docker_daemon q)
+  get_json q
 
 let ping uri =
   let q = uri ^ "/_ping" in
@@ -42,7 +45,5 @@ let pull uri = 0
 let push uri = 0
 
 let () =
-  let s = images docker_uri in
-  let json = Yojson.Basic.from_string s in
+  let json = info docker_uri in
   print_endline (Yojson.Basic.pretty_to_string json)
-
