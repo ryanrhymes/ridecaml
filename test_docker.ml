@@ -16,4 +16,5 @@ let test_fn fn =
 
 test_fn Docker.info;;
 test_fn Docker.version;;
-test_fn Docker.images;;
+test_fn Docker.Image.images;;
+test_fn Docker.Container.containers;;
