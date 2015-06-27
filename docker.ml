@@ -13,7 +13,7 @@ let docker_uri = "http://128.232.65.27:2375"
 
 let docker_daemon uri =
   Client.get (Uri.of_string uri) >>= fun (resp, body) ->
-  body |> Cohttp_lwt_body.to_string
+  Cohttp_lwt_body.to_string body
 
 let containers ?param uri = 
   let q = uri ^ "/containers/json" in
@@ -42,7 +42,7 @@ let pull uri = 0
 let push uri = 0
 
 let () =
-  let s = info docker_uri in
+  let s = images docker_uri in
   let json = Yojson.Basic.from_string s in
   print_endline (Yojson.Basic.pretty_to_string json)
 
