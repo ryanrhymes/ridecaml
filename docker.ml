@@ -95,7 +95,7 @@ module Image = struct
 
   let history uri = 0
 
-  let images uri = 
+  let images ?(all=false) uri = 
     let q = uri ^ "/images/json" in
     get_json q
 
