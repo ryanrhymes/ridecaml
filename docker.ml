@@ -50,3 +50,6 @@ let top uri cid =
   let q = uri ^ "/containers/" ^ cid ^ "/top" in
   get_json q
 
+let version uri = 
+  let q = uri ^ "/version" in
+  get_json q

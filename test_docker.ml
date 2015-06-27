@@ -9,8 +9,11 @@
 
 let docker_uri = "http://128.232.65.27:2375"
 
-let () =
-  let json = Docker.info docker_uri in
-  print_endline (Yojson.Basic.pretty_to_string json);
-  let json = Docker.images docker_uri in
-  print_endline (Yojson.Basic.pretty_to_string json);
+let test_fn fn =
+  let json = fn docker_uri in
+  print_endline (String.make 60 '=');
+  print_endline (Yojson.Basic.pretty_to_string json);;
+
+test_fn Docker.info;;
+test_fn Docker.version;;
+test_fn Docker.images;;
