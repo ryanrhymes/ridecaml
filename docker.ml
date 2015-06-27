@@ -16,8 +16,12 @@ let docker_daemon uri =
   Client.get (Uri.of_string uri) 
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
-let get_json query =
-  Lwt_main.run (docker_daemon query) |> Yojson.Basic.from_string
+let get_json resp =
+  Lwt_main.run (docker_daemon resp) |> Yojson.Basic.from_string
+
+let build_query_string params = 
+  let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
+  String.concat "&" l
 
 
 (** API to container functions. **)
@@ -95,8 +99,9 @@ module Image = struct
 
   let history uri = 0
 
-  let images ?(all=false) uri = 
-    let q = uri ^ "/images/json" in
+  let images ?(filters="") ?(all=false) uri = 
+    let p = build_query_string ["all", string_of_bool all; "filter", ""] in
+    let q = uri ^ "/images/json?" ^ p in
     get_json q
 
   let inspect uri = 0
