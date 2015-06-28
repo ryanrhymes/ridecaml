@@ -14,10 +14,12 @@ let format_output json =
   print_endline (String.make 60 '=');
   print_endline (Yojson.Basic.pretty_to_string json);;
 
+print_endline ( Docker.ping uri );;
 format_output ( Docker.info docker_uri );;
 format_output ( Docker.version docker_uri );;
 format_output ( Docker.Container.containers docker_uri );;
 format_output ( Docker.Image.images uri ~all:false);;
+format_output ( Docker.Image.inspect uri ~id:"91c95931e552");;
+format_output ( Docker.Image.history uri ~id:"91c95931e552");;
 
-let x = Docker.ping uri;;
-print_endline x;;
+

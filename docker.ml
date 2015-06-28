@@ -33,6 +33,7 @@ module Container = struct
   let attach_ws uri = 0
 
   let containers ?param uri = 
+    (** not done yet **)
     let q = uri ^ "/containers/json" in
     get_json q
 
@@ -44,14 +45,15 @@ module Container = struct
 
   let export uri = 0
 
-  let inspect uri cid = 
-    let q = uri ^ "/containers/" ^ cid ^ "/json" in
+  let inspect ~id uri = 
+    let q = uri ^ "/containers/" ^ id ^ "/json" in
     get_json q
 
   let kill uri = 0
 
-  let logs uri cid = 
-    let q = uri ^ "/containers/" ^ cid ^ "/logs" in
+  let logs id uri = 
+    (** not done yet **)
+    let q = uri ^ "/containers/" ^ id ^ "/logs" in
     get_json q
 
   let pause uri = 0
@@ -77,6 +79,7 @@ module Container = struct
   let stop uri = 0
 
   let top uri cid = 
+    (** not done yet **)
     let q = uri ^ "/containers/" ^ cid ^ "/top" in
     get_json q
 
@@ -97,14 +100,19 @@ module Image = struct
 
   let get_image uri = 0
 
-  let history uri = 0
+  let history ~id uri =
+    let q = uri ^ "/images/" ^ id ^ "/history" in
+    get_json q
 
   let images ?(filters="") ?(all=false) uri = 
+    (** not done yet **)
     let p = build_query_string ["all", string_of_bool all; "filter", ""] in
     let q = uri ^ "/images/json?" ^ p in
     get_json q
 
-  let inspect uri = 0
+  let inspect ~id uri =
+    let q = uri ^ "/images/" ^ id ^ "/json" in
+    get_json q
 
   let load uri = 0
 
