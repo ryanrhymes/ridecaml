@@ -18,8 +18,9 @@ print_endline ( Docker.ping uri );;
 format_output ( Docker.info docker_uri );;
 format_output ( Docker.version docker_uri );;
 format_output ( Docker.Container.containers docker_uri );;
+
 format_output ( Docker.Image.images uri ~all:false);;
 format_output ( Docker.Image.inspect uri ~id:"91c95931e552");;
 format_output ( Docker.Image.history uri ~id:"91c95931e552");;
-
+format_output ( Docker.Image.remove uri ~id:"91c95931e552");;
 
