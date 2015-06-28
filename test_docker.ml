@@ -19,3 +19,5 @@ format_output ( Docker.version docker_uri );;
 format_output ( Docker.Container.containers docker_uri );;
 format_output ( Docker.Image.images uri ~all:false);;
 format_output ( Docker.events uri );;
+let x = Docker.ping uri in
+print_endline x;;
