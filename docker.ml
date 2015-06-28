@@ -12,13 +12,6 @@ open Cohttp_lwt_unix
 
 (** These are common functions. **)
 
-let docker_daemon uri =
-  Client.get (Uri.of_string uri) 
-  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
-
-let get_json resp =
-  Lwt_main.run (docker_daemon resp) |> Yojson.Basic.from_string
-
 let docker_daemon_get uri =
   Client.get (Uri.of_string uri) 
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
@@ -31,7 +24,7 @@ let docker_daemon_delete uri =
   Client.delete (Uri.of_string uri) 
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
-let get_json2 operation query =
+let get_json operation query =
   match operation with
   | "GET" -> Lwt_main.run (docker_daemon_get query) |> Yojson.Basic.from_string
   | "POST" -> Lwt_main.run (docker_daemon_post query) |> Yojson.Basic.from_string
@@ -41,6 +34,10 @@ let get_json2 operation query =
 let build_query_string params = 
   let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
   String.concat "&" l
+
+let docker_daemon_get_data uri =
+  Client.get (Uri.of_string uri) 
+  >>= fun (resp, body) -> Cohttp_lwt_body.to_stream body |> return
 
 
 (** API to container functions. **)
@@ -54,7 +51,7 @@ module Container = struct
   let containers ?param uri = 
     (** not done yet **)
     let q = uri ^ "/containers/json" in
-    get_json q
+    get_json "GET" q
 
   let copy uri = 0
 
@@ -66,14 +63,14 @@ module Container = struct
 
   let inspect ~id uri = 
     let q = uri ^ "/containers/" ^ id ^ "/json" in
-    get_json2 "GET" q
+    get_json "GET" q
 
   let kill uri = 0
 
   let logs id uri = 
     (** not done yet **)
     let q = uri ^ "/containers/" ^ id ^ "/logs" in
-    get_json2 "GET" q
+    get_json "GET" q
 
   let pause uri = 0
 
@@ -100,7 +97,7 @@ module Container = struct
   let top uri cid = 
     (** not done yet **)
     let q = uri ^ "/containers/" ^ cid ^ "/top" in
-    get_json2 "GET" q
+    get_json "GET" q
 
   let unpause uri = 0
 
@@ -117,21 +114,24 @@ module Image = struct
 
   let build uri = 0
 
-  let get_image uri = 0
+  let get_image ~id uri =
+    (** not done yet **)
+    let q = uri ^ "/images/" ^ id ^ "/get" in
+    docker_daemon_get_data q
 
   let history ~id uri =
     let q = uri ^ "/images/" ^ id ^ "/history" in
-    get_json2 "GET" q
+    get_json "GET" q
 
   let images ?(filters="") ?(all=false) uri = 
     (** not done yet **)
     let p = build_query_string ["all", string_of_bool all; "filter", ""] in
     let q = uri ^ "/images/json?" ^ p in
-    get_json2 "GET" q
+    get_json "GET" q
 
   let inspect ~id uri =
     let q = uri ^ "/images/" ^ id ^ "/json" in
-    get_json2 "GET" q
+    get_json "GET" q
 
   let load uri = 0
 
@@ -139,7 +139,7 @@ module Image = struct
     (** not done yet **)
     let p = build_query_string ["fromImage", id ] in
     let q = uri ^ "/images/create?" ^ p in
-    get_json2 "POST" q
+    get_json "POST" q
 
   let push uri = 0
 
@@ -150,7 +150,7 @@ module Image = struct
   let remove ?(noprune=false) ?(force=false) ~id uri =
   let p = build_query_string ["noprune", string_of_bool noprune; "force", string_of_bool force] in
     let q = uri ^ "/images/" ^ id ^ "?" ^ p in
-    get_json2 "DELETE" q
+    get_json "DELETE" q
 
 end
 
@@ -164,7 +164,7 @@ let events ?(since=Unix.gettimeofday () -. 3600.) ?(until=Unix.gettimeofday ()) 
   (** not done yet **)
   let p = build_query_string ["since", string_of_float since; "until", string_of_float until] in
   let q = uri ^ "/events?" ^ p in
-  get_json2 "GET" q
+  get_json "GET" q
 
 let exec_create uri = 0
 
@@ -176,12 +176,12 @@ let exec_inspect uri = 0
 
 let info uri = 
   let q = uri ^ "/info" in
-  get_json2 "GET" q
+  get_json "GET" q
 
 let ping uri =
   let q = uri ^ "/_ping" in
-  Lwt_main.run (docker_daemon q)
+  Lwt_main.run (docker_daemon_get q)
 
 let version uri = 
   let q = uri ^ "/version" in
-  get_json2 "GET" q
+  get_json "GET" q

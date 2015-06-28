@@ -19,10 +19,13 @@ format_output ( Docker.info docker_uri );;
 format_output ( Docker.version docker_uri );;
 format_output ( Docker.Container.containers docker_uri );;
 
+(**
 format_output ( Docker.Image.images uri ~all:false);;
 format_output ( Docker.Image.inspect uri ~id:"91c95931e552");;
 format_output ( Docker.Image.history uri ~id:"91c95931e552");;
 format_output ( Docker.Image.remove uri ~id:"91c95931e552");;
 
 Docker.Image.pull uri ~id:"hello-world" ;;
+**)
 
+Docker.Image.get_image uri ~id:"91c95931e552"
