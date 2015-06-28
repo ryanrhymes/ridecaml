@@ -39,6 +39,11 @@ let build_query_string params =
 let docker_daemon_get_data uri =
   Lwt_main.run (docker_daemon_get uri)
 
+let save_to ~fname ~data =
+  let channel = open_out fname in
+  output_string channel data;
+  close_out channel
+
 
 (** API to container functions. **)
 
@@ -186,11 +191,3 @@ let ping uri =
 let version uri = 
   let q = uri ^ "/version" in
   get_json "GET" q
-
-
-(** Helper functions. **)
-
-let save_to ~fname ~data =
-  let channel = open_out fname in
-  output_string channel data;
-  close_out channel
