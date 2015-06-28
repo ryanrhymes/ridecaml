@@ -13,6 +13,10 @@ open Cohttp_lwt_unix
 
 (** These are common functions. **)
 
+let build_query_string params = 
+  let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
+  String.concat "&" l
+
 let docker_daemon_get uri =
   Client.get (Uri.of_string uri) 
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
@@ -25,19 +29,16 @@ let docker_daemon_delete uri =
   Client.delete (Uri.of_string uri) 
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
+let get_data operation query =
+  let s = match operation with
+    | "GET" -> docker_daemon_get query
+    | "POST" -> docker_daemon_post query
+    | "DELETE" -> docker_daemon_delete query
+    | _ -> return "error"
+  in Lwt_main.run s
+
 let get_json operation query =
-  match operation with
-  | "GET" -> Lwt_main.run (docker_daemon_get query) |> Yojson.Basic.from_string
-  | "POST" -> Lwt_main.run (docker_daemon_post query) |> Yojson.Basic.from_string
-  | "DELETE" -> Lwt_main.run (docker_daemon_delete query) |> Yojson.Basic.from_string
-  | _ ->  Yojson.Basic.from_string "error"
-
-let build_query_string params = 
-  let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
-  String.concat "&" l
-
-let docker_daemon_get_data uri =
-  Lwt_main.run (docker_daemon_get uri)
+  get_data operation query |> Yojson.Basic.from_string
 
 let save_to ~fname ~data =
   let channel = open_out fname in
@@ -122,7 +123,7 @@ module Image = struct
   let get_image ~id uri =
     (** not done yet **)
     let q = uri ^ "/images/" ^ id ^ "/get" in
-    docker_daemon_get_data q
+    get_data "GET" q
 
   let history ~id uri =
     let q = uri ^ "/images/" ^ id ^ "/history" in
