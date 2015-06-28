@@ -121,7 +121,6 @@ module Image = struct
   let build uri = 0
 
   let get_image ~id uri =
-    (** not done yet **)
     let q = uri ^ "/images/" ^ id ^ "/get" in
     get_data "GET" q
 
@@ -149,7 +148,10 @@ module Image = struct
 
   let push uri = 0
 
-  let search uri = 0
+  let search ~term uri =
+    let p = build_query_string ["term", term ] in
+    let q = uri ^ "/images/search?" ^ p in
+    get_json "GET" q
 
   let tag uri = 0
 
