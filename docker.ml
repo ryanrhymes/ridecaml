@@ -124,7 +124,11 @@ let auth uri = 0
 
 let commit uri = 0
 
-let events uri = 0
+let events ?(since=Unix.gettimeofday ()) ?(until=Unix.gettimeofday () +. 10.) uri =
+  (** not done yet **)
+  let p = build_query_string ["since", string_of_float since; "until", string_of_float until] in
+  let q = uri ^ "/events" ^ p in
+  get_json q
 
 let exec_create uri = 0
 

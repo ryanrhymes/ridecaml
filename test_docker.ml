@@ -18,3 +18,4 @@ format_output ( Docker.info docker_uri );;
 format_output ( Docker.version docker_uri );;
 format_output ( Docker.Container.containers docker_uri );;
 format_output ( Docker.Image.images uri ~all:false);;
+format_output ( Docker.events uri );;
