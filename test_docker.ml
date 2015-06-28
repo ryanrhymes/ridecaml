@@ -5,9 +5,6 @@
    2015.06.27
 **)
 
-
-
-let docker_uri = "http://128.232.65.27:2375"
 let uri = "http://128.232.65.27:2375"
 
 let format_output json =
@@ -15,9 +12,9 @@ let format_output json =
   print_endline (Yojson.Basic.pretty_to_string json);;
 
 print_endline ( Docker.ping uri );;
-format_output ( Docker.info docker_uri );;
-format_output ( Docker.version docker_uri );;
-format_output ( Docker.Container.containers docker_uri );;
+format_output ( Docker.info uri );;
+format_output ( Docker.version uri );;
+format_output ( Docker.Container.containers uri );;
 
 (**
 Docker.Image.pull uri ~id:"hello-world" ;;
