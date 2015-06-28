@@ -153,7 +153,10 @@ module Image = struct
     let q = uri ^ "/images/search?" ^ p in
     get_json "GET" q
 
-  let tag uri = 0
+  let tag ?(force=false) ~repo ~tags ~id uri =
+    let p = build_query_string ["repo", repo; "tag", tags; "force", string_of_bool force] in
+    let q = uri ^ "/images/" ^ id ^ "/tag?" ^ p in
+    get_data "POST" q
 
   let remove ?(noprune=false) ?(force=false) ~id uri =
   let p = build_query_string ["noprune", string_of_bool noprune; "force", string_of_bool force] in
