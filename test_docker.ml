@@ -24,3 +24,5 @@ format_output ( Docker.Image.inspect uri ~id:"91c95931e552");;
 format_output ( Docker.Image.history uri ~id:"91c95931e552");;
 format_output ( Docker.Image.remove uri ~id:"91c95931e552");;
 
+Docker.Image.pull uri ~id:"hello-world" ;;
+

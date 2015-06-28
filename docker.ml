@@ -135,6 +135,12 @@ module Image = struct
 
   let load uri = 0
 
+  let pull ~id uri = 
+    (** not done yet **)
+    let p = build_query_string ["fromImage", id ] in
+    let q = uri ^ "/images/create?" ^ p in
+    get_json2 "POST" q
+
   let push uri = 0
 
   let search uri = 0
