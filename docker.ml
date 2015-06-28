@@ -7,6 +7,7 @@
 
 open Lwt
 open Cohttp
+open Cohttp_async
 open Cohttp_lwt_unix
 
 
@@ -36,8 +37,7 @@ let build_query_string params =
   String.concat "&" l
 
 let docker_daemon_get_data uri =
-  Client.get (Uri.of_string uri) 
-  >>= fun (resp, body) -> Cohttp_lwt_body.to_stream body |> return
+  Lwt_main.run (docker_daemon_get uri)
 
 
 (** API to container functions. **)
@@ -154,6 +154,7 @@ module Image = struct
 
 end
 
+
 (** API to mist functions. **)
 
 let auth uri = 0
@@ -185,3 +186,11 @@ let ping uri =
 let version uri = 
   let q = uri ^ "/version" in
   get_json "GET" q
+
+
+(** Helper functions. **)
+
+let save_to ~fname ~data =
+  let channel = open_out fname in
+  output_string channel data;
+  close_out channel
