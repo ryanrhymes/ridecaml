@@ -17,6 +17,10 @@ format_output ( Docker.version uri );;
 format_output ( Docker.Container.containers uri );;
 
 format_output ( Docker.Image.search uri ~term:"ryanrhymes");;
+print_endline ( Docker.Image.import_from_file uri ~fname:"zzz.tar");;
+
+
+(** format_output ( Docker.Image.push uri ~id:"hello2" ~tag:"new");; **)
 
 (**
 Docker.Image.pull uri ~id:"hello-world" ;;
@@ -26,5 +30,5 @@ format_output ( Docker.Image.history uri ~id:"91c95931e552");;
 format_output ( Docker.Image.remove uri ~id:"91c95931e552");;
 Docker.Image.pull uri ~id:"hello-world" ;;
 print_endline ( Docker.Image.tag uri ~id:"91c95931e552" ~tags:"new" ~repo:"hello2");;
-Docker.save_to ~fname:"abc.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e552")
+Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e552")
 **)
