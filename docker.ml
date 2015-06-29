@@ -143,7 +143,7 @@ module Image = struct
     get_json "GET" q
 
   let import_from_file ~fname uri =
-    (** need more test ... **)
+    (** need more test ... need to add repo and tag ... **)
     let q = uri ^ "/images/load" in
     get_data ~data:(read_from fname) ~operation:"POST" q
 
