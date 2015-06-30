@@ -32,4 +32,4 @@ Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e
 **)
 
 
-format_output ( Docker.Container.containers uri ~limit:100 ~before:"8a6324354f8a098a8727f45afaab1202c661754f0e01c730498a4cf276478021");;
+format_output ( Docker.Container.containers uri ~limit:100 ~size:true);;
