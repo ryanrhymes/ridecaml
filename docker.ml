@@ -62,14 +62,15 @@ module Container = struct
 
   let attach_ws uri = 0
 
-  let containers ?(limit) ?(all=false) uri = 
+  let containers ?filter ?size ?before ?since ?limit ?all uri = 
     (** not done yet **)
-    let x =
-      match limit, all with
-      | Some limit, Some all -> "some"
-      | None, None -> "none";
-    let p = build_query_string ["all", string_of_bool all;] in
+    let p = match all with None -> ["all", "false"] | Some x -> [ "all", string_of_bool x ] in
+    let p = match limit with None -> p | Some x -> p @ [ "limit", string_of_int x ] in
+    let p = match since with None -> p | Some x -> p @ [ "since", x ] in
+    let p = match since with None -> p | Some x -> p @ [ "before", x ] in
+    let p = build_query_string p in
     let q = uri ^ "/containers/json?" ^ p in
+    print_endline q;
     get_json "GET" q
 
   let copy uri = 0
