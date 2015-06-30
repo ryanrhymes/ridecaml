@@ -62,9 +62,14 @@ module Container = struct
 
   let attach_ws uri = 0
 
-  let containers ?param uri = 
+  let containers ?(limit) ?(all=false) uri = 
     (** not done yet **)
-    let q = uri ^ "/containers/json" in
+    let x =
+      match limit, all with
+      | Some limit, Some all -> "some"
+      | None, None -> "none";
+    let p = build_query_string ["all", string_of_bool all;] in
+    let q = uri ^ "/containers/json?" ^ p in
     get_json "GET" q
 
   let copy uri = 0
