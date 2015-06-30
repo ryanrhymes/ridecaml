@@ -63,7 +63,6 @@ module Container = struct
   let attach_ws uri = 0
 
   let containers ?filters ?size ?before ?since ?limit ?all uri = 
-    (** not done yet **)
     let p = match all with None -> ["all", "false"] | Some x -> [ "all", string_of_bool x ] in
     let p = match limit with None -> p | Some x -> p @ [ "limit", string_of_int x ] in
     let p = match since with None -> p | Some x -> p @ [ "since", x ] in
@@ -143,9 +142,10 @@ module Image = struct
     let q = uri ^ "/images/" ^ id ^ "/history" in
     get_json "GET" q
 
-  let images ?(filters="") ?(all=false) uri = 
-    (** not done yet **)
-    let p = build_query_string ["all", string_of_bool all; "filter", ""] in
+  let images ?filters ?all uri = 
+    let p = match all with None -> ["all", "false"] | Some x -> [ "all", string_of_bool x ] in
+    let p = match filters with None -> p | Some x -> p @ [ "filters", x ] in
+    let p = build_query_string p in
     let q = uri ^ "/images/json?" ^ p in
     get_json "GET" q
 

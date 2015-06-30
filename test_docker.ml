@@ -33,3 +33,5 @@ Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e
 
 
 format_output ( Docker.Container.containers uri ~limit:100 ~size:true);;
+
+format_output ( Docker.Image.images uri ~all:true);;
