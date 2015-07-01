@@ -73,7 +73,9 @@ module Container = struct
     let q = uri ^ "/containers/json?" ^ p in
     get_json "GET" q
 
-  let copy uri = 0
+  let copy ~data ~id uri =
+    let q = uri ^ "/containers/" ^ id ^ "/copy" in
+    get_data ~data ~operation:"POST" q
 
   let create uri = 0
 
