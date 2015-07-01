@@ -129,7 +129,9 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/unpause" in
     get_data "POST" q
 
-  let wait uri = 0
+  let wait ~id uri =
+    let q = uri ^ "/containers/" ^ id ^ "/wait" in
+    get_data "POST" q
 
 end
 
