@@ -87,10 +87,13 @@ module Container = struct
 
   let kill uri = 0
 
-  let logs id uri = 
-    (** not done yet **)
-    let q = uri ^ "/containers/" ^ id ^ "/logs" in
-    get_json "GET" q
+  let logs ?(tail=1024) ?(timestamp=false) ?(since=0.) ?(stderr=false) ?(stdout=false) ?(follow=false) ~id uri = 
+    (** stream, follow not working **)
+    let p = build_query_string ["follow", string_of_bool follow; "stdout", string_of_bool stdout; 
+				"stderr", string_of_bool stderr; "since", string_of_float since; 
+				"timestamp", string_of_bool timestamp; "tail", string_of_int tail ] in
+    let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
+    get_data "GET" q
 
   let pause uri = 0
 
@@ -114,9 +117,10 @@ module Container = struct
 
   let stop uri = 0
 
-  let top uri cid = 
-    (** not done yet **)
-    let q = uri ^ "/containers/" ^ cid ^ "/top" in
+  let top ?ps_args ~id uri = 
+    let p = match ps_args with None -> [] | Some x -> [ "ps_args", x ] in
+    let p = build_query_string p in
+    let q = uri ^ "/containers/" ^ id ^ "/top?" ^ p in
     get_json "GET" q
 
   let unpause uri = 0
