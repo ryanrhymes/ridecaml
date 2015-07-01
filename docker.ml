@@ -105,7 +105,9 @@ module Container = struct
 
   let push uri = 0
 
-  let remove uri = 0
+  let remove ~id uri = 
+    let q = uri ^ "/containers/" ^ id in
+    get_json "DELETE" q
 
   let rename uri = 0
 
