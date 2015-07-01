@@ -88,7 +88,10 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/json" in
     get_json "GET" q
 
-  let kill uri = 0
+  let kill ?(signal="SIGKILL") ~id uri =
+    let p = build_query_string [ "signal", signal ] in
+    let q = uri ^ "/containers/" ^ id ^ "/kill?" ^p  in
+    get_data "POST" q
 
   let logs ?(tail=1024) ?(timestamp=false) ?(since=0.) ?(stderr=false) ?(stdout=false) ?(follow=false) ~id uri = 
     (** stream, follow not working **)
