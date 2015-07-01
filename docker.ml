@@ -95,7 +95,9 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
     get_data "GET" q
 
-  let pause uri = 0
+  let pause ~id uri =
+    let q = uri ^ "/containers/" ^ id ^ "/pause" in
+    get_data "POST" q
 
   let port uri = 0
 
@@ -123,7 +125,9 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/top?" ^ p in
     get_json "GET" q
 
-  let unpause uri = 0
+  let unpause ~id uri =
+    let q = uri ^ "/containers/" ^ id ^ "/unpause" in
+    get_data "POST" q
 
   let wait uri = 0
 
