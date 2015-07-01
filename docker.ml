@@ -74,6 +74,7 @@ module Container = struct
     get_json "GET" q
 
   let copy ~data ~id uri =
+    (** not done yet **)
     let q = uri ^ "/containers/" ^ id ^ "/copy" in
     get_data ~data ~operation:"POST" q
 
@@ -113,7 +114,10 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "?" ^ p in
     get_json "DELETE" q
 
-  let rename uri = 0
+  let rename ~name ~id uri =
+    let p = build_query_string [ "name", name ] in
+    let q = uri ^ "/containers/" ^ id ^ "/rename?" ^ p in
+    get_data "POST" q
 
   let resize uri = 0
 
