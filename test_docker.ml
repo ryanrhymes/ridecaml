@@ -33,5 +33,5 @@ Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e
 
 
 format_output ( Docker.Container.containers uri );;
-print_endline ( Docker.Container.wait uri ~id:"e59afb5e58a7f950cc39ffb719079d077f54b7934d74a0827e3ffc6c8651d991" );;
+format_output ( Docker.Container.wait uri ~id:"4bb426ab8553" )
 (** print_endline ( Docker.Container.logs uri ~stdout:true ~id:"e59afb5e58a7f950cc39ffb719079d077f54b7934d74a0827e3ffc6c8651d991" );; **)

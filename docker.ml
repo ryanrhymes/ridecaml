@@ -131,7 +131,7 @@ module Container = struct
 
   let wait ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/wait" in
-    get_data "POST" q
+    get_json "POST" q
 
 end
 
