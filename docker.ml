@@ -105,8 +105,10 @@ module Container = struct
 
   let push uri = 0
 
-  let remove ~id uri = 
-    let q = uri ^ "/containers/" ^ id in
+  let remove ?(force=false) ?(v=false) ~id uri = 
+    (** gets block if using force=true **)
+    let p = build_query_string [ "force", string_of_bool force; "v", string_of_bool v ] in
+    let q = uri ^ "/containers/" ^ id ^ "?" ^ p in
     get_json "DELETE" q
 
   let rename uri = 0

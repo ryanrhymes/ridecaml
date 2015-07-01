@@ -33,5 +33,7 @@ Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e
 
 
 format_output ( Docker.Container.containers uri );;
-format_output ( Docker.Container.remove uri ~id:"fb25d9ba3190" )
+(** debug: format_output ( Docker.Container.remove uri ~id:"56982a434760" ~force:true ** );;
 (** print_endline ( Docker.Container.logs uri ~stdout:true ~id:"e59afb5e58a7f950cc39ffb719079d077f54b7934d74a0827e3ffc6c8651d991" );; **)
+
+print_endline "stop"
