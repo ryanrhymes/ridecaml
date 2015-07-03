@@ -110,12 +110,6 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/pause" in
     get_data "POST" q
 
-  let port uri = 0
-
-  let pull uri = 0
-
-  let push uri = 0
-
   let remove ?(force=false) ?(v=false) ~id uri = 
     (** gets block if using force=true **)
     let p = build_query_string [ "force", string_of_bool force; "v", string_of_bool v ] in
