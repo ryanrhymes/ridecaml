@@ -80,7 +80,9 @@ module Container = struct
 
   let create uri = 0
 
-  let changes uri = 0
+  let changes ~id uri =
+    let q = uri ^ "/containers/" ^ id ^ "/changes" in
+    get_json "GET" q
 
   let export uri = 0
 
