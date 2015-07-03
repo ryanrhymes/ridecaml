@@ -81,6 +81,7 @@ module Container = struct
   let create uri = 0
 
   let changes ~id uri =
+    (** return values: 0:modify; 1:add; 2:delete; **)
     let q = uri ^ "/containers/" ^ id ^ "/changes" in
     get_json "GET" q
 
