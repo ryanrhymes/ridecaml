@@ -35,6 +35,7 @@ Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e
 format_output ( Docker.Container.containers uri );;
 print_endline ( Docker.Container.rename uri ~name:"liang" ~id:"beed0abbab13" );;
 print_endline ( Docker.Container.kill uri ~id:"56982a434760" );;
+format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 (** print_endline ( Docker.Container.copy ~data:"Content-Type: application/json\n" ~id:"56982a434760" uri );; **)
 (** debug: format_output ( Docker.Container.remove uri ~id:"56982a434760" ~force:true );; **)
