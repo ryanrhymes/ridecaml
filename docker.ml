@@ -133,7 +133,11 @@ module Container = struct
 
   let start uri = 0
 
-  let stats uri = 0
+  let stats ?(stream=false) ~id uri =
+    (** not really working ... **)
+    let p = build_query_string [ "stream", string_of_bool stream ] in
+    let q = uri ^ "/containers/" ^ id ^ "/stats?" ^ p in
+    get_data "GET" q
 
   let stop uri = 0
 
