@@ -33,7 +33,7 @@ Docker.save_to ~fname:"zzz.tar" ~data:(Docker.Image.get_image uri ~id:"91c95931e
 
 
 format_output ( Docker.Container.containers uri );;
-print_endline ( Docker.Container.resize ~w:80 ~h:40  uri ~id:"beed0abbab13");;
+print_endline ( Docker.Container.restart ~t: 10 uri ~id:"57b5de2cd3ae");;
 (**
 print_endline ( Docker.Container.rename uri ~name:"liang" ~id:"beed0abbab13" );;
 print_endline ( Docker.Container.kill uri ~id:"56982a434760" );;

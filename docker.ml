@@ -132,7 +132,10 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/resize?" ^ p in
     get_data "POST" q
 
-  let restart uri = 0
+  let restart ?(t=0) ~id uri =
+    let p = build_query_string [ "t", string_of_int t ] in
+    let q = uri ^ "/containers/" ^ id ^ "/restart?" ^ p in
+    get_data "POST" q
 
   let start uri = 0
 
