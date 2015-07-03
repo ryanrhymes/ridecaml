@@ -85,7 +85,9 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/changes" in
     get_json "GET" q
 
-  let export uri = 0
+  let export ~id uri =
+    let q = uri ^ "/containers/" ^ id ^ "/export" in
+    get_data "GET" q
 
   let inspect ~id uri = 
     let q = uri ^ "/containers/" ^ id ^ "/json" in
