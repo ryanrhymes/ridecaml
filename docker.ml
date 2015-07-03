@@ -145,7 +145,10 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/stats?" ^ p in
     get_data "GET" q
 
-  let stop uri = 0
+  let stop ?(t=0) ~id uri =
+    let p = build_query_string [ "t", string_of_int t ] in
+    let q = uri ^ "/containers/" ^ id ^ "/stop?" ^ p in
+    get_data "POST" q
 
   let top ?ps_args ~id uri = 
     let p = match ps_args with None -> [] | Some x -> [ "ps_args", x ] in
