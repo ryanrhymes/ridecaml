@@ -48,4 +48,4 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 (** print_endline ( Docker.events uri ) **)
 
-print_endline ( test2 uri )
+print_endline ( Docker.test2 uri )
