@@ -42,5 +42,5 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 (** print_endline ( Docker.Container.copy ~data:"Content-Type: application/json\n" ~id:"56982a434760" uri );; **)
 (** debug: format_output ( Docker.Container.remove uri ~id:"56982a434760" ~force:true );; **)
-print_endline ( Docker.Container.logs uri ~stdout:true ~id:"ce57583605d1" ~follow:false );;
+print_endline ( Docker.Container.logs uri ~stdout:true ~id:"ce57583605d1" ~follow:true );;
 

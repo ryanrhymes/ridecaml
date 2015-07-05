@@ -102,6 +102,14 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
     get_data "GET" q
 
+  let logs2 ?(tail=1024) ?(timestamp=false) ?(since=0.) ?(stderr=false) ?(stdout=false) ?(follow=false) ~id uri = 
+    (** stream, follow not working **)
+    let p = build_query_string ["follow", string_of_bool follow; "stdout", string_of_bool stdout; 
+				"stderr", string_of_bool stderr; "since", string_of_float since; 
+				"timestamp", string_of_bool timestamp; "tail", string_of_int tail ] in
+    let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
+    get_data "GET" q
+
   let pause ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/pause" in
     get_data "POST" q
