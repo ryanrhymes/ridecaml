@@ -12,12 +12,11 @@ open Cohttp_lwt_unix
 
 
 let test1 uri = 
-  Client.get (Uri.of_string uri) 
-  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
+  let headers = Cohttp.Header.of_list ["connection","close"] in
+  let s = Client.call ~headers `GET (Uri.of_string uri) >>= fun (res, body) ->
+  Lwt_stream.iter_s (fun s -> return ()) (Cohttp_lwt_body.to_stream body)
+  in Lwt_main.run s
 
-let test2 uri = 
-  let s = test1 uri in
-  Lwt_main.run s
 
 
 (** These are common functions. **)
