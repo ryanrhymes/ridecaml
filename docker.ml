@@ -11,6 +11,15 @@ open Cohttp_async
 open Cohttp_lwt_unix
 
 
+let test1 uri = 
+  Client.get (Uri.of_string uri) 
+  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
+
+let test2 uri = 
+  let s = test1 uri in
+  Lwt_main.run s
+
+
 (** These are common functions. **)
 
 let build_query_string params = 
@@ -108,7 +117,13 @@ module Container = struct
 				"stderr", string_of_bool stderr; "since", string_of_float since; 
 				"timestamp", string_of_bool timestamp; "tail", string_of_int tail ] in
     let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
-    get_data "GET" q
+    let s = docker_daemon_get q in
+    while true do
+      Unix.sleep 1;
+      print_endline "heatbeat ...";
+      print_endline (Lwt_main.run s)
+    done;
+    Lwt_main.run s
 
   let pause ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/pause" in
@@ -240,7 +255,7 @@ let events ?(since=Unix.gettimeofday () -. 3600.) ?(until=Unix.gettimeofday ()) 
   (** not done yet **)
   let p = build_query_string ["since", string_of_float since; "until", string_of_float until] in
   let q = uri ^ "/events?" ^ p in
-  get_json "GET" q
+  get_data "GET" q
 
 let exec_create uri = 0
 
