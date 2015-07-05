@@ -225,9 +225,12 @@ end
 
 (** API to mist functions. **)
 
-let auth uri = 0
+let login ~username ~password ~email ~registry ~reauth ~cfg_path  uri =
+  (** not tested yet **)
+  0
+  
 
-let commit uri = 0
+let commit = 0
 
 let events ?(since=Unix.gettimeofday () -. 3600.) ?(until=Unix.gettimeofday ()) uri =
   (** not done yet **)
