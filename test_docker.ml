@@ -49,4 +49,4 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 (** print_endline ( Docker.events uri ) **)
 
 
-print_endline ( Docker.test1 ( uri ^ "/images/json" ) )
+Docker.test1 ( uri ^ "/events" )
