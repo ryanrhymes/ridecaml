@@ -31,7 +31,7 @@ let test3 uri =
   let s = Client.get (Uri.of_string uri) >>= fun (res, body) ->
     let headers = Response.headers res in
     show_headers headers;
-    Lwt_stream.iter (fun s -> return () ) (Cohttp_lwt_body.to_stream body)
+    Lwt_stream.iter_s (fun s -> return () ) (Cohttp_lwt_body.to_stream body)
   in Lwt_main.run s
 
   

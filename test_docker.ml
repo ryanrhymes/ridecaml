@@ -49,6 +49,6 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 (** print_endline ( Docker.events uri ) **)
 
 
-Docker.test1 ( uri ^ "/events" )
+Docker.test1 ( uri ^ "/events" );;
 
 print_endline "liang wang"
