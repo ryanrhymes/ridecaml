@@ -55,7 +55,7 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 let s = Docker.test3 ( uri ^ "/events" ) in
 match s with
-| string -> print_endline "working..."
+| Lwt.t -> print_endline "working..."
 | _ -> print_endline "error"
 ;;
 
