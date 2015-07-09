@@ -62,5 +62,5 @@ match s with
 **)
 
 let s = Docker.get_stream ( uri ^ "/events" ) >>= fun x ->
-Lwt_stream.iter_s (fun y -> Docker.info y; return ()) x;
+Lwt_stream.iter_s (fun y -> Docker.print_info y; return ()) x;
 in Lwt_main.run s
