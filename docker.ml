@@ -27,12 +27,9 @@ let test1 uri =
   in Lwt_main.run s
 
 let test3 uri = 
-  let headers = Cohttp.Header.of_list [] in
-  let s = Client.get (Uri.of_string uri) >>= fun (res, body) ->
-    let headers = Response.headers res in
-    show_headers headers;
-    Lwt_stream.iter_s (fun s -> return () ) (Cohttp_lwt_body.to_stream body)
-  in Lwt_main.run s
+  Client.get (Uri.of_string uri) >>= fun (res, body) ->
+  let r = Cohttp_lwt_body.to_stream body in
+  return r
 
   
 

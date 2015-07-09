@@ -5,6 +5,11 @@
    2015.06.27
 **)
 
+open Lwt
+open Cohttp
+open Cohttp_async
+open Cohttp_lwt_unix
+
 let uri = "http://128.232.65.27:2375"
 
 let format_output json =
@@ -48,7 +53,9 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 (** print_endline ( Docker.events uri ) **)
 
+let s = Docker.test3 ( uri ^ "/events" ) in
+match s with
+| string -> print_endline "working..."
+| _ -> print_endline "error"
+;;
 
-Docker.test1 ( uri ^ "/events" );;
-
-print_endline "liang wang"
