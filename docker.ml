@@ -14,7 +14,7 @@ open Cohttp_lwt_unix
 let show_headers h =
   Cohttp.Header.iter (fun k v -> List.iter (Printf.eprintf "%s: %s\n%!" k) v) h
 
-let test2 s = 
+let info s = 
   print_endline s;
   print_endline "=======>"
 
@@ -23,10 +23,10 @@ let test1 uri =
   let s = Client.get (Uri.of_string uri) >>= fun (res, body) ->
     let headers = Response.headers res in
     show_headers headers;
-    Lwt_stream.iter_s (fun s -> test2 s; return ()) (Cohttp_lwt_body.to_stream body)
+    Lwt_stream.iter_s (fun s -> info s; return ()) (Cohttp_lwt_body.to_stream body)
   in Lwt_main.run s
 
-let test3 uri = 
+let get_stream uri = 
   Client.get (Uri.of_string uri) >>= fun (res, body) ->
   let r = Cohttp_lwt_body.to_stream body in
   return r
