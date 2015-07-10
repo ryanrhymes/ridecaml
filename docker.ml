@@ -37,9 +37,6 @@ let get_data ?(data="") ~operation query =
     | _ -> return "error"
   in Lwt_main.run s
 
-let get_json ~operation query =
-  get_data operation query |> Yojson.Basic.from_string
-
 let get_stream ~operation uri = 
   Client.get (Uri.of_string uri) >>= fun (res, body) ->
   let r = Cohttp_lwt_body.to_stream body in
@@ -72,7 +69,7 @@ module Container = struct
     let p = match filters with None -> p | Some x -> p @ [ "filters", x ] in
     let p = build_query_string p in
     let q = uri ^ "/containers/json?" ^ p in
-    get_json "GET" q
+    get_data "GET" q
 
   let copy ~data ~id uri =
     (** not done yet **)
@@ -84,7 +81,7 @@ module Container = struct
   let changes ~id uri =
     (** return values: 0:modify; 1:add; 2:delete; **)
     let q = uri ^ "/containers/" ^ id ^ "/changes" in
-    get_json "GET" q
+    get_data "GET" q
 
   let export ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/export" in
@@ -92,7 +89,7 @@ module Container = struct
 
   let inspect ~id uri = 
     let q = uri ^ "/containers/" ^ id ^ "/json" in
-    get_json "GET" q
+    get_data "GET" q
 
   let kill ?(signal="SIGKILL") ~id uri =
     let p = build_query_string [ "signal", signal ] in
@@ -115,7 +112,7 @@ module Container = struct
     (** gets block if using force=true **)
     let p = build_query_string [ "force", string_of_bool force; "v", string_of_bool v ] in
     let q = uri ^ "/containers/" ^ id ^ "?" ^ p in
-    get_json "DELETE" q
+    get_data "DELETE" q
 
   let rename ~name ~id uri =
     let p = build_query_string [ "name", name ] in
@@ -148,7 +145,7 @@ module Container = struct
     let p = match ps_args with None -> [] | Some x -> [ "ps_args", x ] in
     let p = build_query_string p in
     let q = uri ^ "/containers/" ^ id ^ "/top?" ^ p in
-    get_json "GET" q
+    get_data "GET" q
 
   let unpause ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/unpause" in
@@ -156,7 +153,7 @@ module Container = struct
 
   let wait ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/wait" in
-    get_json "POST" q
+    get_data "POST" q
 
 end
 
@@ -175,14 +172,14 @@ module Image = struct
 
   let history ~id uri =
     let q = uri ^ "/images/" ^ id ^ "/history" in
-    get_json "GET" q
+    get_data "GET" q
 
   let images ?filters ?all uri = 
     let p = match all with None -> ["all", "false"] | Some x -> [ "all", string_of_bool x ] in
     let p = match filters with None -> p | Some x -> p @ [ "filters", x ] in
     let p = build_query_string p in
     let q = uri ^ "/images/json?" ^ p in
-    get_json "GET" q
+    get_data "GET" q
 
   let import_from_file ~fname uri =
     (** need more test ... need to add repo and tag ... **)
@@ -191,24 +188,24 @@ module Image = struct
 
   let inspect ~id uri =
     let q = uri ^ "/images/" ^ id ^ "/json" in
-    get_json "GET" q
+    get_data "GET" q
 
   let pull ~id uri = 
     (** not done yet **)
     let p = build_query_string ["fromImage", id ] in
     let q = uri ^ "/images/create?" ^ p in
-    get_json "POST" q
+    get_data "POST" q
 
   let push ?(tag="latest") ~id uri =
     (** not done yet **)
     let p = build_query_string ["tag", tag ] in
     let q = uri ^ "/images/" ^ id ^ "/push?" ^ p in
-    get_json "POST" q
+    get_data "POST" q
 
   let search ~term uri =
     let p = build_query_string ["term", term ] in
     let q = uri ^ "/images/search?" ^ p in
-    get_json "GET" q
+    get_data "GET" q
 
   let tag ?(force=false) ~repo ~tags ~id uri =
     let p = build_query_string ["repo", repo; "tag", tags; "force", string_of_bool force] in
@@ -218,7 +215,7 @@ module Image = struct
   let remove ?(noprune=false) ?(force=false) ~id uri =
   let p = build_query_string ["noprune", string_of_bool noprune; "force", string_of_bool force] in
     let q = uri ^ "/images/" ^ id ^ "?" ^ p in
-    get_json "DELETE" q
+    get_data "DELETE" q
 
 end
 
@@ -247,7 +244,7 @@ let exec_inspect uri = 0
 
 let info uri = 
   let q = uri ^ "/info" in
-  get_json "GET" q
+  get_data "GET" q
 
 let ping uri =
   let q = uri ^ "/_ping" in
@@ -255,7 +252,7 @@ let ping uri =
 
 let version uri = 
   let q = uri ^ "/version" in
-  get_json "GET" q
+  get_data "GET" q
 
 let show_headers h =
   Cohttp.Header.iter (fun k v -> List.iter (Printf.eprintf "%s: %s\n%!" k) v) h
