@@ -116,26 +116,12 @@ module Container = struct
     get_data "POST" q
 
   let logs ?(tail=1024) ?(timestamp=false) ?(since=0.) ?(stderr=false) ?(stdout=false) ?(follow=false) ~id uri = 
-    (** stream, follow not working **)
+    (** return stream or string **)
     let p = build_query_string ["follow", string_of_bool follow; "stdout", string_of_bool stdout; 
 				"stderr", string_of_bool stderr; "since", string_of_float since; 
 				"timestamp", string_of_bool timestamp; "tail", string_of_int tail ] in
     let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
     get_stream "GET" q
-
-  let logs2 ?(tail=1024) ?(timestamp=false) ?(since=0.) ?(stderr=false) ?(stdout=false) ?(follow=false) ~id uri = 
-    (** stream, follow not working **)
-    let p = build_query_string ["follow", string_of_bool follow; "stdout", string_of_bool stdout; 
-				"stderr", string_of_bool stderr; "since", string_of_float since; 
-				"timestamp", string_of_bool timestamp; "tail", string_of_int tail ] in
-    let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
-    let s = docker_daemon_get q in
-    while true do
-      Unix.sleep 1;
-      print_endline "heatbeat ...";
-      print_endline (Lwt_main.run s)
-    done;
-    Lwt_main.run s
 
   let pause ~id uri =
     let q = uri ^ "/containers/" ^ id ^ "/pause" in

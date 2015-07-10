@@ -59,6 +59,6 @@ Lwt_stream.iter_s (fun y -> Docker.print_info y; return ()) x;
 in Lwt_main.run s
 **)
 
-let s = Docker.Container.logs uri ~stdout:true ~id:"c93792d12ad2" ~follow:true >>= fun x ->
+let s = Docker.Container.logs uri ~stdout:true ~id:"c93792d12ad2" ~follow:false >>= fun x ->
 Lwt_stream.iter_s (fun y -> print_endline y; return ()) x;
 in Lwt_main.run s
