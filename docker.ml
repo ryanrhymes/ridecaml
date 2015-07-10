@@ -56,7 +56,7 @@ let get_data ?(data="") ~operation query =
 let get_json ~operation query =
   get_data operation query |> Yojson.Basic.from_string
 
-let get_stream uri = 
+let get_stream ~operation uri = 
   Client.get (Uri.of_string uri) >>= fun (res, body) ->
   let r = Cohttp_lwt_body.to_stream body in
   return r
@@ -121,7 +121,7 @@ module Container = struct
 				"stderr", string_of_bool stderr; "since", string_of_float since; 
 				"timestamp", string_of_bool timestamp; "tail", string_of_int tail ] in
     let q = uri ^ "/containers/" ^ id ^ "/logs?" ^ p in
-    get_data "GET" q
+    get_stream "GET" q
 
   let logs2 ?(tail=1024) ?(timestamp=false) ?(since=0.) ?(stderr=false) ?(stdout=false) ?(follow=false) ~id uri = 
     (** stream, follow not working **)
@@ -264,10 +264,9 @@ let login ~username ~password ~email ~registry ~reauth ~cfg_path  uri =
 let commit = 0
 
 let events ?(since=Unix.gettimeofday () -. 3600.) ?(until=Unix.gettimeofday ()) uri =
-  (** not done yet **)
   let p = build_query_string ["since", string_of_float since; "until", string_of_float until] in
   let q = uri ^ "/events?" ^ p in
-  get_data "GET" q
+  get_stream "GET" q
 
 let exec_create uri = 0
 
