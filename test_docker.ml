@@ -48,19 +48,12 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 (** print_endline ( Docker.Container.copy ~data:"Content-Type: application/json\n" ~id:"56982a434760" uri );; **)
 (** debug: format_output ( Docker.Container.remove uri ~id:"56982a434760" ~force:true );; **)
-(** print_endline ( Docker.Container.logs2 uri ~stdout:true ~id:"d9b914429bdf" ~follow:false );; **)
 
-
-(** print_endline ( Docker.events uri ) **)
-
+(**
 let s = Docker.Container.logs uri ~stdout:true ~id:"d4ed8662204e" ~follow:true >>= fun x ->
 Lwt_stream.iter_s (fun y -> print_endline y; return ()) x;
 in Lwt_main.run s;;
 
-
-print_endline (Docker.info uri);;
-
-(**
 let s = Docker.events uri >>= fun x ->
 Lwt_stream.iter_s (fun y -> print_endline y; return ()) x;
 in Lwt_main.run s
@@ -69,3 +62,5 @@ let s = Docker.Container.stats uri ~id:"c93792d12ad2" ~stream:true >>= fun x ->
 Lwt_stream.iter_s (fun y -> print_endline y; return ()) x;
 in Lwt_main.run s
 **)
+
+print_endline (Docker.info uri);;
