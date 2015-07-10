@@ -25,12 +25,6 @@ let test1 uri =
     show_headers headers;
     Lwt_stream.iter_s (fun s -> print_info s; return ()) (Cohttp_lwt_body.to_stream body)
   in Lwt_main.run s
-
-let get_stream uri = 
-  Client.get (Uri.of_string uri) >>= fun (res, body) ->
-  let r = Cohttp_lwt_body.to_stream body in
-  return r
-
   
 
 (** These are common functions. **)
@@ -61,6 +55,11 @@ let get_data ?(data="") ~operation query =
 
 let get_json ~operation query =
   get_data operation query |> Yojson.Basic.from_string
+
+let get_stream uri = 
+  Client.get (Uri.of_string uri) >>= fun (res, body) ->
+  let r = Cohttp_lwt_body.to_stream body in
+  return r
 
 let save_to ~fname ~data =
   let open Core.Std in
