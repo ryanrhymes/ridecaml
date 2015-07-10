@@ -37,7 +37,7 @@ let get_data ?(data="") ~operation query =
     | _ -> return "error"
   in Lwt_main.run s
 
-let get_stream ~operation uri = 
+let get_stream ?(data="") ~operation uri = 
   Client.get (Uri.of_string uri) >>= fun (res, body) ->
   let r = Cohttp_lwt_body.to_stream body in
   return r
@@ -49,7 +49,6 @@ let save_to ~fname ~data =
 let read_from ~fname = 
   let open Core.Std in
   In_channel.read_all fname
-
 
 
 (** API to container functions. **)
