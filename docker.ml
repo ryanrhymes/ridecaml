@@ -18,7 +18,7 @@ let build_query_string params =
   String.concat "&" l
 
 let docker_daemon_get uri =
-  Client.get (Uri.of_string uri) 
+  Client.get (Uri.of_string uri)
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
 let docker_daemon_post ~data uri =
@@ -26,7 +26,7 @@ let docker_daemon_post ~data uri =
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
 let docker_daemon_delete uri =
-  Client.delete (Uri.of_string uri) 
+  Client.delete (Uri.of_string uri)
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
 let get_data ?(data="") ~operation query =
@@ -37,10 +37,23 @@ let get_data ?(data="") ~operation query =
     | _ -> return "error"
   in Lwt_main.run s
 
+let get_data1 ?(data="") ~operation uri =
+  let meth = match operation with
+    | "GET" -> Client.get (Uri.of_string uri)
+    | "POST" -> Client.post ~body:(Cohttp_lwt_body.of_string data) (Uri.of_string uri)
+    | "DELETE" -> Client.delete (Uri.of_string uri)
+    | _ -> Client.get (Uri.of_string uri) in
+  ( meth >>= fun (resp, body) -> Cohttp_lwt_body.to_string body )
+  |> Lwt_main.run
+
 let get_stream ?(data="") ~operation uri = 
-  Client.get (Uri.of_string uri) >>= fun (res, body) ->
-  let r = Cohttp_lwt_body.to_stream body in
-  return r
+  let meth = match operation with
+    | "GET" -> Client.get (Uri.of_string uri)
+    | "POST" -> Client.post ~body:(Cohttp_lwt_body.of_string data) (Uri.of_string uri)
+    | "DELETE" -> Client.delete (Uri.of_string uri)
+    | _ -> Client.get (Uri.of_string uri) in
+  meth >>= fun (res, body) ->
+  return ( Cohttp_lwt_body.to_stream body )
 
 let save_to ~fname ~data =
   let open Core.Std in

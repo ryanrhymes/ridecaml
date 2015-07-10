@@ -63,6 +63,8 @@ Lwt_stream.iter_s (fun y -> print_endline y; return ()) x;
 in Lwt_main.run s
 **)
 
+print_endline (Docker.info uri);;
+
 let s = Docker.Container.stats uri ~id:"c93792d12ad2" ~stream:true >>= fun x ->
 Lwt_stream.iter_s (fun y -> print_endline y; return ()) x;
 in Lwt_main.run s
