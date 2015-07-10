@@ -53,17 +53,8 @@ format_output ( Docker.Container.changes uri ~id:"beed0abbab13");;
 
 (** print_endline ( Docker.events uri ) **)
 
-(**
+
 let s = Docker.get_stream ( uri ^ "/events" ) >>= fun x ->
 Lwt_stream.iter_s (fun y -> Docker.print_info y; return ()) x;
 in Lwt_main.run s
-**)
 
-let s = Docker.get_stream ( uri ^ "/events" ) >>= fun x ->
-  Lwt_stream.get x >>= fun y ->
-  let s = match y with
-    | Some y -> y
-    | None -> "error"
-  in print_endline s;
-return ()
-in Lwt_main.run s
