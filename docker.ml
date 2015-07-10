@@ -11,22 +11,6 @@ open Cohttp_async
 open Cohttp_lwt_unix
 
 
-let show_headers h =
-  Cohttp.Header.iter (fun k v -> List.iter (Printf.eprintf "%s: %s\n%!" k) v) h
-
-let print_info s = 
-  print_endline s;
-  print_endline "=======>"
-
-let test1 uri = 
-  let headers = Cohttp.Header.of_list [] in
-  let s = Client.get (Uri.of_string uri) >>= fun (res, body) ->
-    let headers = Response.headers res in
-    show_headers headers;
-    Lwt_stream.iter_s (fun s -> print_info s; return ()) (Cohttp_lwt_body.to_stream body)
-  in Lwt_main.run s
-  
-
 (** These are common functions. **)
 
 let build_query_string params = 
@@ -151,10 +135,9 @@ module Container = struct
   let start uri = 0
 
   let stats ?(stream=false) ~id uri =
-    (** not really working ... **)
     let p = build_query_string [ "stream", string_of_bool stream ] in
     let q = uri ^ "/containers/" ^ id ^ "/stats?" ^ p in
-    get_data "GET" q
+    get_stream "GET" q
 
   let stop ?(t=0) ~id uri =
     let p = build_query_string [ "t", string_of_int t ] in
@@ -273,3 +256,10 @@ let ping uri =
 let version uri = 
   let q = uri ^ "/version" in
   get_json "GET" q
+
+let show_headers h =
+  Cohttp.Header.iter (fun k v -> List.iter (Printf.eprintf "%s: %s\n%!" k) v) h
+
+let print_info s = 
+  print_endline s;
+  print_endline "=======>"
