@@ -240,7 +240,7 @@ let info uri =
 
 let ping uri =
   let q = uri ^ "/_ping" in
-  Lwt_main.run (docker_daemon_get q)
+  get_data "GET" q
 
 let version uri = 
   let q = uri ^ "/version" in
