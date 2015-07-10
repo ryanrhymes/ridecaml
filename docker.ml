@@ -29,7 +29,7 @@ let docker_daemon_delete uri =
   Client.delete (Uri.of_string uri)
   >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
 
-let get_data ?(data="") ~operation query =
+let get_data1 ?(data="") ~operation query =
   let s = match operation with
     | "GET" -> docker_daemon_get query
     | "POST" -> docker_daemon_post ~data query
@@ -37,7 +37,7 @@ let get_data ?(data="") ~operation query =
     | _ -> return "error"
   in Lwt_main.run s
 
-let get_data1 ?(data="") ~operation uri =
+let get_data ?(data="") ~operation uri =
   let meth = match operation with
     | "GET" -> Client.get (Uri.of_string uri)
     | "POST" -> Client.post ~body:(Cohttp_lwt_body.of_string data) (Uri.of_string uri)
