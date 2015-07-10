@@ -17,26 +17,6 @@ let build_query_string params =
   let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
   String.concat "&" l
 
-let docker_daemon_get uri =
-  Client.get (Uri.of_string uri)
-  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
-
-let docker_daemon_post ~data uri =
-  Client.post ~body:(Cohttp_lwt_body.of_string data) (Uri.of_string uri) 
-  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
-
-let docker_daemon_delete uri =
-  Client.delete (Uri.of_string uri)
-  >>= fun (resp, body) -> Cohttp_lwt_body.to_string body
-
-let get_data1 ?(data="") ~operation query =
-  let s = match operation with
-    | "GET" -> docker_daemon_get query
-    | "POST" -> docker_daemon_post ~data query
-    | "DELETE" -> docker_daemon_delete query
-    | _ -> return "error"
-  in Lwt_main.run s
-
 let get_data ?(data="") ~operation uri =
   let meth = match operation with
     | "GET" -> Client.get (Uri.of_string uri)
