@@ -214,10 +214,8 @@ end
 
 (** API to mist functions. **)
 
-let login ~username ~password ~email ~registry ~reauth ~cfg_path  uri =
+let login ~username ~password ~email ~registry ~reauth ~cfg_path uri = 0
   (** not tested yet **)
-  0
-  
 
 let commit = 0
 
