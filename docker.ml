@@ -79,7 +79,10 @@ module Container = struct
     get_data ~data ~operation:"POST" q
 
   let create ?image ?cmd ?hostname ?domainname ?user ?attachstdin ?attachstdout ?attachstderr ?tty ?openstdin ?stdinonce
-      ?memory uri =
+      ?env ?entrypoint ?labels ?volumes ?networkdisabled ?macaddress ?exposedports
+      ?binds ?links ?lxcconf ?memory ?memoryswap ?cpushares ?cpuperiod ?cpusetcpus ?cpusetmems ?blkioweight ?oomkilldisable
+      ?portbindings ?publishAllPorts ?privileged ?readonlyRootfs ?dns ?dnsSearch ?extraHosts ?volumesFrom ?capAdd ?capDrop
+      ?restartPolicy ?networkMode ?devices ?ulimits ?logConfig ?securityOpt ?cgroupParent uri =
     let open Yojson in
     let p = match image with None -> [] | Some x -> [ "Image", `String x ] in
     let p = match hostname with None -> p | Some x -> p @ [ "HostName", `String x ] in
@@ -91,9 +94,29 @@ module Container = struct
     let p = match attachstderr with None -> p | Some x -> p @ [ "AttachStderr", `Bool x ] in
     let p = match tty with None -> p | Some x -> p @ [ "Tty", `Bool x ] in
     let p = match openstdin with None -> p | Some x -> p @ [ "OpenStdin", `Bool x ] in
+    let p = match env with None -> p | Some x -> p @ [ "Env", `Assoc (List.map (fun (k,v) -> (k,`String v)) x) ] in
     let p = match stdinonce with None -> p | Some x -> p @ [ "StdinOnce", `Bool x ] in
-    print_endline (pretty_to_string (`Assoc p));
-    let p = to_string (`Assoc p) in
+    let p = match entrypoint with None -> p | Some x -> p @ [ "EntryPoint", `String x ] in
+    let p = match labels with None -> p | Some x -> p @ [ "Labels", `Assoc (List.map (fun (k,v) -> (k,`String v)) x) ] in
+    let p = match volumes with None -> p | Some x -> p @ [ "Volumes", `List (List.map (fun v -> `String v) x) ] in
+    let p = match networkdisabled with None -> p | Some x -> p @ [ "NetworkDisabled", `Bool x ] in
+    let p = match macaddress with None -> p | Some x -> p @ [ "MacAddress", `String x ] in
+    let p = match exposedports with None -> p | Some x -> p @ [ "ExposedPorts", `List (List.map (fun v -> `String v) x) ] in
+    (** build HostConfig **)
+    let r = match binds with None -> [] | Some x -> [ "Binds", `List (List.map (fun v -> `String v) x) ] in
+    let r = match links with None -> r | Some x -> r @ [ "Links", `List (List.map (fun v -> `String v) x) ] in
+    let r = match lxcconf with None -> r | Some x -> r @ [ "LxcConf", `Assoc (List.map (fun (k,v) -> (k,`String v)) x) ] in
+    let r = match memory with None -> r | Some x -> r @ [ "Memory", `Int x ] in
+    let r = match memoryswap with None -> r | Some x -> r @ [ "MemorySwap", `Int x ] in
+    let r = match cpushares with None -> r | Some x -> r @ [ "CpuShares", `Int x ] in
+    let r = match cpuperiod with None -> r | Some x -> r @ [ "CpuPeriod", `Int x ] in
+    let r = match cpusetcpus with None -> r | Some x -> r @ [ "CpusetCpus", `String x ] in
+    let r = match cpusetmems with None -> r | Some x -> r @ [ "CpusetMems", `String x ] in
+    let r = match blkioweight with None -> r | Some x -> r @ [ "BlkioWeight", `Int x ] in
+    let r = match oomkilldisable with None -> r | Some x -> r @ [ "OomKillDisable", `Bool x ] in
+    (** combine conf then submit **)
+    print_endline (pretty_to_string (`Assoc (p @ [ "HostConfig", `Assoc r ])));
+    let p = to_string (`Assoc (p @ [ "HostConfig", `Assoc r ])) in
     let q = uri ^ "/containers/create" in
     get_data2 ~operation:"POST" ~data:p q
 

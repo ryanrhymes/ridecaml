@@ -66,4 +66,5 @@ in Lwt_main.run s
 print_endline (Docker.info uri);;
 
 print_endline (Docker.Container.create ~image:"ubuntu" ~cmd:[ "/bin/ls"; "/bin/date"; "/bin/ping www.google.com" ] 
-		 ~tty:true uri);;
+		 ~env:["PASSWORD","abc"; "PATH","/bin"] ~tty:true ~labels:["liang","test"; "docker","debug"] 
+		 ~memory:512 uri);;
