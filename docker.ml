@@ -101,6 +101,16 @@ module Container = struct
     let q = uri ^ "/containers/create" in
     get_data2 ~operation:"POST" ~data:p q
 
+  let create2 ?image ?cmd ?hostname ?domainname ?user ?attachstdin ?attachstdout ?attachstderr ?tty ?openstdin ?stdinonce
+      ?memory uri =
+    let open Yojson in
+    let p = match image with None -> [] | Some x -> [ "Image", `String x ] in
+    let p = match hostname with None -> p | Some x -> p @ [ "HostName", `String x ] in
+    let p = match domainname with None -> p | Some x -> p @ [ "DomainName", `String x ] in
+    let p = pretty_to_string (`Assoc p) in
+    p
+
+
   let changes ~id uri =
     (** return values: 0:modify; 1:add; 2:delete; **)
     let q = uri ^ "/containers/" ^ id ^ "/changes" in
