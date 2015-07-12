@@ -83,12 +83,19 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/copy" in
     get_data ~data ~operation:"POST" q
 
-  let create ?image ?cmd ?hostname ?domainname ?user ?detach ?memory uri =
+  let create ?image ?cmd ?hostname ?domainname ?user ?attachstdin ?attachstdout ?attachstderr ?tty ?openstdin ?stdinonce
+      ?memory uri =
     let p = match image with None -> [] | Some x -> [ "Image", "\"" ^ x ^ "\"" ] in
     let p = match hostname with None -> p | Some x -> p @ [ "HostName", "\"" ^ x ^ "\"" ] in
     let p = match domainname with None -> p | Some x -> p @ [ "DomainName", "\"" ^ x ^ "\"" ] in
     let p = match cmd with None -> p | Some x -> p @ [ "Cmd", "[ " ^ String.concat ", " (List.map (fun v -> "\"" ^ v ^ "\"") x) ^ " ]" ] in
     let p = match user with None -> p | Some x -> p @ [ "User", "\"" ^ x ^ "\"" ] in
+    let p = match attachstdin with None -> p | Some x -> p @ [ "AttachStdin", string_of_bool x ] in
+    let p = match attachstdout with None -> p | Some x -> p @ [ "AttachStdout", string_of_bool x ] in
+    let p = match attachstderr with None -> p | Some x -> p @ [ "AttachStderr", string_of_bool x ] in
+    let p = match tty with None -> p | Some x -> p @ [ "Tty", string_of_bool x ] in
+    let p = match openstdin with None -> p | Some x -> p @ [ "OpenStdin", string_of_bool x ] in
+    let p = match stdinonce with None -> p | Some x -> p @ [ "StdinOnce", string_of_bool x ] in
     let p = build_json_string p in
     print_endline p;
     let q = uri ^ "/containers/create" in
