@@ -65,8 +65,5 @@ in Lwt_main.run s
 
 print_endline (Docker.info uri);;
 
-print_endline (Docker.Container.create2 ~image:"ubuntu" uri);;
-(**
 print_endline (Docker.Container.create ~image:"ubuntu" ~cmd:[ "/bin/ls"; "/bin/date"; "/bin/ping www.google.com" ] 
 		 ~tty:true uri);;
-**)

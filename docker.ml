@@ -85,30 +85,22 @@ module Container = struct
 
   let create ?image ?cmd ?hostname ?domainname ?user ?attachstdin ?attachstdout ?attachstderr ?tty ?openstdin ?stdinonce
       ?memory uri =
-    let p = match image with None -> [] | Some x -> [ "Image", "\"" ^ x ^ "\"" ] in
-    let p = match hostname with None -> p | Some x -> p @ [ "HostName", "\"" ^ x ^ "\"" ] in
-    let p = match domainname with None -> p | Some x -> p @ [ "DomainName", "\"" ^ x ^ "\"" ] in
-    let p = match cmd with None -> p | Some x -> p @ [ "Cmd", "[ " ^ String.concat ", " (List.map (fun v -> "\"" ^ v ^ "\"") x) ^ " ]" ] in
-    let p = match user with None -> p | Some x -> p @ [ "User", "\"" ^ x ^ "\"" ] in
-    let p = match attachstdin with None -> p | Some x -> p @ [ "AttachStdin", string_of_bool x ] in
-    let p = match attachstdout with None -> p | Some x -> p @ [ "AttachStdout", string_of_bool x ] in
-    let p = match attachstderr with None -> p | Some x -> p @ [ "AttachStderr", string_of_bool x ] in
-    let p = match tty with None -> p | Some x -> p @ [ "Tty", string_of_bool x ] in
-    let p = match openstdin with None -> p | Some x -> p @ [ "OpenStdin", string_of_bool x ] in
-    let p = match stdinonce with None -> p | Some x -> p @ [ "StdinOnce", string_of_bool x ] in
-    let p = build_json_string p in
-    print_endline p;
-    let q = uri ^ "/containers/create" in
-    get_data2 ~operation:"POST" ~data:p q
-
-  let create2 ?image ?cmd ?hostname ?domainname ?user ?attachstdin ?attachstdout ?attachstderr ?tty ?openstdin ?stdinonce
-      ?memory uri =
     let open Yojson in
     let p = match image with None -> [] | Some x -> [ "Image", `String x ] in
     let p = match hostname with None -> p | Some x -> p @ [ "HostName", `String x ] in
     let p = match domainname with None -> p | Some x -> p @ [ "DomainName", `String x ] in
-    let p = pretty_to_string (`Assoc p) in
-    p
+    let p = match cmd with None -> p | Some x -> p @ [ "Cmd", `List (List.map (fun v -> `String v) x) ] in
+    let p = match user with None -> p | Some x -> p @ [ "User", `String x ] in
+    let p = match attachstdin with None -> p | Some x -> p @ [ "AttachStdin", `Bool x ] in
+    let p = match attachstdout with None -> p | Some x -> p @ [ "AttachStdout", `Bool x ] in
+    let p = match attachstderr with None -> p | Some x -> p @ [ "AttachStderr", `Bool x ] in
+    let p = match tty with None -> p | Some x -> p @ [ "Tty", `Bool x ] in
+    let p = match openstdin with None -> p | Some x -> p @ [ "OpenStdin", `Bool x ] in
+    let p = match stdinonce with None -> p | Some x -> p @ [ "StdinOnce", `Bool x ] in
+    print_endline (pretty_to_string (`Assoc p));
+    let p = to_string (`Assoc p) in
+    let q = uri ^ "/containers/create" in
+    get_data2 ~operation:"POST" ~data:p q
 
 
   let changes ~id uri =
