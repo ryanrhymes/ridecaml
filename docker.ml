@@ -84,9 +84,10 @@ module Container = struct
     get_data ~data ~operation:"POST" q
 
   let create ?image ?cmd ?hostname ?domainname ?user ?detach ?memory uri =
-    let p = match hostname with None -> [] | Some x -> [ "HostName", "\"" ^ x ^ "\"" ] in
+    let p = match image with None -> [] | Some x -> [ "Image", "\"" ^ x ^ "\"" ] in
+    let p = match hostname with None -> p | Some x -> p @ [ "HostName", "\"" ^ x ^ "\"" ] in
     let p = match domainname with None -> p | Some x -> p @ [ "DomainName", "\"" ^ x ^ "\"" ] in
-    let p = match cmd with None -> p | Some x -> p @ [ "Cmd", "\"" ^ x ^ "\"" ] in
+    let p = match cmd with None -> p | Some x -> p @ [ "Cmd", "[ " ^ String.concat ", " (List.map (fun v -> "\"" ^ v ^ "\"") x) ^ " ]" ] in
     let p = match user with None -> p | Some x -> p @ [ "User", "\"" ^ x ^ "\"" ] in
     let p = build_json_string p in
     print_endline p;
