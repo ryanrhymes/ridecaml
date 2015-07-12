@@ -64,3 +64,5 @@ in Lwt_main.run s
 **)
 
 print_endline (Docker.info uri);;
+
+print_endline (Docker.Container.create ~image:"hello-world" ~cmd:"/bin/ls" uri);;

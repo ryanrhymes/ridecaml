@@ -17,10 +17,25 @@ let build_query_string params =
   let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
   String.concat "&" l
 
+let build_json_string params = 
+  let l = List.map (fun (k,v) -> "\"" ^ k ^"\"" ^ ":" ^ v) params in
+  let s = String.concat ",\n" l in
+  "{\n" ^ s ^ "\n}"
+
 let get_data ?(data="") ~operation uri =
   let meth = match operation with
     | "GET" -> Client.get (Uri.of_string uri)
     | "POST" -> Client.post ~body:(Cohttp_lwt_body.of_string data) (Uri.of_string uri)
+    | "DELETE" -> Client.delete (Uri.of_string uri)
+    | _ -> Client.get (Uri.of_string uri) in
+  ( meth >>= fun (resp, body) -> Cohttp_lwt_body.to_string body )
+  |> Lwt_main.run
+
+let get_data2 ?(headers=["Content-Type","application/json"]) ?(data="") ~operation uri =
+  let headers = Header.of_list headers in
+  let meth = match operation with
+    | "GET" -> Client.get (Uri.of_string uri)
+    | "POST" -> Client.post ~headers:headers ~body:(Cohttp_lwt_body.of_string data) (Uri.of_string uri)
     | "DELETE" -> Client.delete (Uri.of_string uri)
     | _ -> Client.get (Uri.of_string uri) in
   ( meth >>= fun (resp, body) -> Cohttp_lwt_body.to_string body )
@@ -68,7 +83,15 @@ module Container = struct
     let q = uri ^ "/containers/" ^ id ^ "/copy" in
     get_data ~data ~operation:"POST" q
 
-  let create uri = 0
+  let create ?image ?cmd ?hostname ?domainname ?user ?detach ?memory uri =
+    let p = match hostname with None -> [] | Some x -> [ "HostName", "\"" ^ x ^ "\"" ] in
+    let p = match domainname with None -> p | Some x -> p @ [ "DomainName", "\"" ^ x ^ "\"" ] in
+    let p = match cmd with None -> p | Some x -> p @ [ "Cmd", "\"" ^ x ^ "\"" ] in
+    let p = match user with None -> p | Some x -> p @ [ "User", "\"" ^ x ^ "\"" ] in
+    let p = build_json_string p in
+    print_endline p;
+    let q = uri ^ "/containers/create" in
+    get_data2 ~operation:"POST" ~data:p q
 
   let changes ~id uri =
     (** return values: 0:modify; 1:add; 2:delete; **)
