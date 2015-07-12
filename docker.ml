@@ -17,11 +17,6 @@ let build_query_string params =
   let l = List.map (fun (k,v) -> k ^ "=" ^ v) params in
   String.concat "&" l
 
-let build_json_string params = 
-  let l = List.map (fun (k,v) -> "\"" ^ k ^"\"" ^ ":" ^ v) params in
-  let s = String.concat ",\n" l in
-  "{\n" ^ s ^ "\n}"
-
 let get_data ?(data="") ~operation uri =
   let meth = match operation with
     | "GET" -> Client.get (Uri.of_string uri)
